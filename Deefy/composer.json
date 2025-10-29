@@ -1,0 +1,13 @@
+{
+    "name": "iutnc/deefy",
+    "description": "Projet TD7 autoloader PSR-4",
+    "minimum-stability": "stable",
+    "require": {
+        "james-heinrich/getid3": "^1.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "iutnc\\deefy\\": "src/classes/"
+        }
+    }
+}
