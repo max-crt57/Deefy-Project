@@ -20,7 +20,7 @@ class Playlist extends AudioList {
             $this->nbPistes = count($this->pistes);
             $this->dureeTotale = 0;
             foreach ($this->pistes as $p) {
-                $this->dureeTotale += $p->getDuree();
+                $this->dureeTotale += $p->duree;
             }
         }
     }
@@ -31,7 +31,7 @@ class Playlist extends AudioList {
             $this->nbPistes = count($this->pistes);
             $this->dureeTotale = 0;
             foreach ($this->pistes as $p) {
-                $this->dureeTotale += $p->getDuree();
+                $this->dureeTotale += $p->duree;
             }
         } else {
             throw new Exception("Indice de piste invalide : $indice");
@@ -47,7 +47,7 @@ class Playlist extends AudioList {
         $this->nbPistes = count($this->pistes);
         $this->dureeTotale = 0;
         foreach ($this->pistes as $p) {
-            $this->dureeTotale += $p->getDuree();
+            $this->dureeTotale += $p->duree;
         }
     }
 

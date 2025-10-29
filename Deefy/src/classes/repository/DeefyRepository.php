@@ -6,6 +6,8 @@ use PDO;
 use Exception;
 use iutnc\deefy\audio\lists\Playlist;
 use iutnc\deefy\audio\tracks\AudioTrack;
+use iutnc\deefy\audio\tracks\AlbumTrack;
+use iutnc\deefy\audio\tracks\PodcastTrack;
 
 class DeefyRepository{
 
@@ -168,6 +170,66 @@ class DeefyRepository{
         return $playlists;
     }
 
+    public function saveTrackToPlaylist($track, $playlist): void {
+        $stmt = $this->pdo->prepare("INSERT INTO track (titre, filename, duree, genre, type) VALUES (:titre, :filename, :duree, :genre, :type)");
+        $titre = $track->titre;
+        $filename = $track->nomFichierAudio;
+        $duree = $track->duree;
+        $genre = $track->genre;
 
+        if ($track instanceof AlbumTrack) {
+            $type = 'A';
+        } 
+        else {
+            $type = 'P';
+        }
+
+        $stmt = $this->pdo->prepare("INSERT INTO track (titre, filename, duree, genre, type) VALUES (:titre, :filename, :duree, :genre, :type)");
+        $stmt->execute([
+            ':titre' => $titre,
+            ':filename' => $filename,
+            ':duree' => $duree,
+            ':genre' => $genre,
+            ':type' => $type
+        ]);
+
+        $track_id = $this->pdo->lastInsertId();
+
+        if ($track instanceof AlbumTrack) {
+            $stmt2 = $this->pdo->prepare("UPDATE track SET artiste_album = :artiste, titre_album = :album, annee_album = :annee, numero_album = :numero WHERE id = :id");
+            $stmt2->execute([
+                ':artiste' => $track->artiste,
+                ':album' => $track->album,
+                ':annee' => $track->annee,
+                ':numero' => $track->numero,
+                ':id' => $track_id
+            ]);
+        } 
+        else {
+            if ($track instanceof PodcastTrack) {
+                $stmt3 = $this->pdo->prepare("UPDATE track SET auteur_podcast = :auteur, date_posdcast = :date WHERE id = :id");
+                $stmt3->execute([
+                    ':auteur' => $track->auteur,
+                    ':date' => $track->date,
+                    ':id' => $track_id
+                ]);
+            }
+        }
+
+        $stmt4 = $this->pdo->prepare("INSERT INTO playlist2track (id_pl, id_track, no_piste_dans_liste) VALUES (:id_pl, :id_track, :no_piste)");
+
+        if (isset($playlist->liste_pistes)) {
+            $numero = count($playlist->liste_pistes);
+        } 
+        else {
+            $numero = 0;
+        }
+
+        $stmt4->execute([
+            ':id_pl' => $playlist->id,
+            ':id_track' => $track_id,
+            ':no_piste' => $numero + 1
+        ]);
+    }
 
 }

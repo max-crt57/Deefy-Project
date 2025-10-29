@@ -19,7 +19,7 @@ class AudioListRenderer implements Renderer{
 
         foreach ($this->liste->pistes as $index => $piste) {
             $titre = $piste->titre;
-            $dureeSec = $piste->getDuree();
+            $dureeSec = $piste->duree;
             if ($dureeSec > 0){
                 $duree = $dureeSec . " secondes";
             }
@@ -32,6 +32,7 @@ class AudioListRenderer implements Renderer{
         $html .= "</ul><br>";
         $html .= "<p><strong>Nombre de pistes :</strong> " . $this->liste->nbPistes . "</p><br>";
         $html .= "<p><strong>Durée totale :</strong> " . $this->liste->dureeTotale . " secondes</p><br>";
+        $html .= "<p><a href='?action=add-track'>Ajouter une nouvelle piste audio ou un podcast</a></p><br>";
         $html .= "</div><br>";
 
         return $html;

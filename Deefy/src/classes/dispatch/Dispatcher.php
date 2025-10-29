@@ -71,7 +71,6 @@ class Dispatcher {
                     <a href='?action=signin-user'>Connexion</a>
                     <a href='?action=list-playlist'>Mes playlists</a>
                     <a href='?action=add-playlist'>Créer une playlist</a>
-                    <a href='?action=add-track'>Ajouter une piste</a>
                 </nav>
             </header>
             <main>
