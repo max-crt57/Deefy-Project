@@ -10,6 +10,7 @@ use iutnc\deefy\action\AddPodcastTrackAction;
 use iutnc\deefy\action\AddUserAction;
 use iutnc\deefy\action\SigninAction;
 use iutnc\deefy\action\ListPlayListsAction;
+use iutnc\deefy\action\DisplayCurrentPlaylistAction;
 
 class Dispatcher {
 
@@ -25,6 +26,9 @@ class Dispatcher {
 
     public function run(): void {
         switch ($this->action) {
+            case 'current-playlist':
+                $act = new DisplayCurrentPlaylistAction();
+                break;
             case 'list-playlist':
                 $act = new ListPlayListsAction();
                 break;
@@ -70,6 +74,7 @@ class Dispatcher {
                     <a href='?action=add-user'>Inscription</a>
                     <a href='?action=signin-user'>Connexion</a>
                     <a href='?action=list-playlist'>Mes playlists</a>
+                    <a href='?action=current-playlist'>Playlist courante</a>
                     <a href='?action=add-playlist'>Créer une playlist</a>
                 </nav>
             </header>

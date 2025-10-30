@@ -33,6 +33,7 @@ class AudioListRenderer implements Renderer{
         $html .= "<p><strong>Nombre de pistes :</strong> " . $this->liste->nbPistes . "</p><br>";
         $html .= "<p><strong>Durée totale :</strong> " . $this->liste->dureeTotale . " secondes</p><br>";
         $html .= "<p><a href='?action=add-track'>Ajouter une nouvelle piste audio ou un podcast</a></p><br>";
+        $html .= "<p><a href='?action=list-playlist'>Retour à mes playlists</a></p><br>";
         $html .= "</div><br>";
 
         return $html;
