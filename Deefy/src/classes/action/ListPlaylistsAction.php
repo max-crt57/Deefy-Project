@@ -3,13 +3,20 @@ namespace iutnc\deefy\action;
 
 use iutnc\deefy\repository\DeefyRepository;
 use iutnc\deefy\auth\AuthnProvider;
+use iutnc\deefy\exception\AuthnException;
 
 class ListPlaylistsAction extends Action {
 
     public function execute(): string {
 
         DeefyRepository::setConfig(__DIR__ . '/../../config/db.config.ini');
-        $user = AuthnProvider::getSignedInUser();
+
+        try{
+            $user = AuthnProvider::getSignedInUser();
+        }
+        catch(AuthnException $e){
+            return "<p style='color:red;'>Veuillez vous connecter pour voir vos playlists.</p>";
+        }
 
         if ($user === null) {
             return "<p>Vous devez être connecté pour accéder à vos playlists !</p>";

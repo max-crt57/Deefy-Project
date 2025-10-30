@@ -53,56 +53,31 @@ class DeefyRepository{
         return $playlists;
     }
 
-    public function saveEmptyPlaylist(Playlist $p): void {
+    public function saveEmptyPlaylist(Playlist $p, int $id_user): void {
+        $pdo = $this->pdo;
         $nom = $p->__get('nom');
-        $query = $this->pdo->prepare("INSERT INTO playlist (nom) VALUES (:nom)");
-        $query->execute([':nom' => $nom]);
-        $p->setId((int)$this->pdo->lastInsertId());
-    }
 
-    public function savePodcastTrack(AudioTrack $t): void {
-        $queryID = $this->pdo->query("SELECT MAX(id) AS max_id FROM track");
-        $row = $queryID->fetch(\PDO::FETCH_ASSOC);
-        if (is_null($row['max_id'])){
-            $newId = 1;
-        }
-        else{
-            $newId = $row['max_id'] + 1;
-        }
-
-        $t->setId($newId);
-        $query = $this->pdo->prepare("
-            INSERT INTO track (id, titre, genre, duree, filename)
-            VALUES (:id, :titre, :genre, :duree, :filename)
+        $check = $pdo->prepare("
+            SELECT COUNT(*) 
+            FROM playlist p
+            INNER JOIN user2playlist u2p ON p.id = u2p.id_pl
+            WHERE p.nom = :nom AND u2p.id_user = :id_user
         ");
+        $check->execute([':nom' => $nom, ':id_user' => $id_user]);
+        $existe = $check->fetchColumn();
 
-        $query->execute([
-            ':id'       => $t->__get('id'),
-            ':titre'    => $t->__get('titre'),
-            ':genre'    => $t->__get('genre'),
-            ':duree'    => $t->__get('duree'),
-            ':filename' => $t->__get('nomFichierAudio')
-        ]);
-    }
-
-
-    public function addTrackToPlaylist(int $idPlaylist, int $idTrack): void {
-        // Récupérer la position actuelle max dans la playlist
-        $query1 = $this->pdo->prepare("SELECT MAX(no_piste_dans_liste) AS max_pos FROM playlist2track WHERE id_pl = :id_pl");
-        $query1->execute([':id_pl' => $idPlaylist]);
-        $maxPos = $query1->fetch(PDO::FETCH_ASSOC)['max_pos'];
-
-        // Si la playlist est vide, maxPos sera null : on commence à 1
-        if (is_null($maxPos)){
-            $newPos = 1;
-        }
-        else{
-            $newPos = $maxPos + 1;
+        if ($existe > 0) {
+            throw new \Exception("Vous avez déjà une playlist portant ce nom !");
         }
 
-        // Insérer la piste avec sa position
-        $query2 = $this->pdo->prepare("INSERT INTO playlist2track(id_pl, id_track, no_piste_dans_liste) VALUES (:id_pl, :id_track, :pos)");
-        $query2->execute([':id_pl'    => $idPlaylist, ':id_track' => $idTrack, ':pos'      => $newPos]);
+        $insert = $pdo->prepare("INSERT INTO playlist (nom) VALUES (:nom)");
+        $insert->execute([':nom' => $nom]);
+        $id_playlist = (int)$pdo->lastInsertId();
+
+        $p->setId($id_playlist);
+
+        $link = $pdo->prepare("INSERT INTO user2playlist (id_user, id_pl) VALUES (:id_user, :id_pl)");
+        $link->execute([':id_user' => $id_user, ':id_pl' => $id_playlist]);
     }
 
     public function getPdo():PDO{
