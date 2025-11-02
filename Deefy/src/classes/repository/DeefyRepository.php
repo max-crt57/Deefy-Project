@@ -104,27 +104,54 @@ class DeefyRepository{
         $query2->execute([':id' => $id]);
         $tracks = [];
 
-        while ($ligne = $query2->fetch(PDO::FETCH_ASSOC)) {
-            $auteur = "Inconnu";
-            if (isset($ligne['auteur']) && $ligne['auteur'] !== '') {
-                $auteur = $ligne['auteur'];
+        while ($row = $query2->fetch()) {
+
+            if (isset($row['titre']) && $row['titre'] !== '') {
+                $titre = htmlspecialchars($row['titre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            } 
+            else {
+                $titre = 'Sans titre';
             }
 
-            $date = "Inconnue";
-            if (isset($ligne['date']) && $ligne['date'] !== '') {
-                $date = $ligne['date'];
+            if (isset($row['filename']) && $row['filename'] !== '') {
+                $fichier = htmlspecialchars($row['filename'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            } else {
+                $fichier = 'fichier_inconnu.mp3';
             }
-            $track = new \iutnc\deefy\audio\tracks\PodcastTrack(
-                $ligne['titre'],
-                $ligne['filename'],
-                (int)$ligne['duree'],
-                $ligne['genre'],
-                $auteur,
-                $date
-            );
-            $track->setId((int)$ligne['id']);
+
+            if (isset($row['genre']) && $row['genre'] !== '') {
+                $genre = htmlspecialchars($row['genre'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            } 
+            else {
+                $genre = '';
+            }
+
+            if (isset($row['duree']) && is_numeric($row['duree'])) {
+                $duree = (int)$row['duree'];
+            } 
+            else {
+                $duree = 0;
+            }
+
+            if (isset($row['auteur_podcast']) && $row['auteur_podcast'] !== '') {
+                $auteur = htmlspecialchars($row['auteur_podcast'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            } 
+            else {
+                $auteur = 'Inconnu';
+            }
+
+            if (isset($row['date_podcast']) && $row['date_podcast'] !== '') {
+                $date = htmlspecialchars($row['date_podcast'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            } 
+            else {
+                $date = 'Inconnue';
+            }
+
+            $track = new PodcastTrack($titre, $fichier, $duree, $genre, $auteur, $date);
+            $track->setId((int)$row['id']);
             $tracks[] = $track;
         }
+
 
         $playlist->ajouterListePistes($tracks);
         return $playlist;

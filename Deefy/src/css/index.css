@@ -1,29 +1,4 @@
+/* index.css - styles personnalisés complémentaires */
 body {
-    font-family: Arial, sans-serif;
-    margin: 30px;
-    background-color: #f7f7f7;
-}
-header {
-    background-color: #333;
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-}
-nav a {
-    color: white;
-    margin: 0 15px;
-    font-weight: bold;
-}
-main {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 15px;
-    box-shadow: 0 0 5px #ccc;
-}
-footer {
-    margin-top: 20px;
-    font-size: 0.9em;
-    color: #555;
-    text-align: center;
+    scroll-behavior: smooth;
 }

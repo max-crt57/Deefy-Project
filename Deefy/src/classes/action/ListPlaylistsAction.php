@@ -15,7 +15,7 @@ class ListPlaylistsAction extends Action {
             $user = AuthnProvider::getSignedInUser();
         }
         catch(AuthnException $e){
-            return "<p style='color:red;'>Veuillez vous connecter pour voir vos playlists.</p>";
+            return "<p style='color:red;'>Veuillez vous connecter pour voir vos playlists !</p>";
         }
 
         if ($user === null) {
