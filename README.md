@@ -12,18 +12,6 @@ Projet réalisé dans le cadre du BUT Informatique - IUT Nancy-Charlemagne (2025
 *  Stockage MySQL avec PDO et requêtes préparées
 *  Sécurisation des entrées et gestion des erreurs
 
-## Structure du projet
-
-Deefy/
-├── index.php
-├── index.css
-├── src/
-│   ├── classes/
-│   └── audio/
-├── config/
-└── audio/
-
-
 ## Auteur
 
 **Maxime Craincourt**
