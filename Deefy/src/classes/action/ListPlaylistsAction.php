@@ -23,7 +23,14 @@ class ListPlaylistsAction extends Action {
         }
 
         $repo = DeefyRepository::getInstance();
-        $playlists = $repo->getPlaylistsByUser((int) $user['id']);
+        if (isset($user['role']) && (int)$user['role'] === 100) {
+            $stmt = $repo->getPdo()->prepare("SELECT * FROM playlist");
+            $stmt->execute();
+            $playlists = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } 
+        else {
+            $playlists = $repo->getPlaylistsByUser((int) $user['id']);
+        }
 
         if (empty($playlists)) {
             return "<p>Vous n’avez encore aucune playlist ! <a href='?action=add-playlist'>Créer une playlist</a></p>";
@@ -31,8 +38,16 @@ class ListPlaylistsAction extends Action {
 
         $html = "<h2>Mes Playlists</h2><ul>";
         foreach ($playlists as $pl) {
-            $html .= "<li><a href='?action=display-playlist&id={$pl->getId()}'>"
-                  . htmlspecialchars($pl->nom, ENT_HTML5)
+            if (is_object($pl)) {
+                $id = $pl->getId();
+                $nom = $pl->nom;
+            } 
+            else {
+                $id = $pl['id'];
+                $nom = $pl['nom'];
+            }
+            $html .= "<li><a href='?action=display-playlist&id={$id}'>"
+                  . htmlspecialchars($nom, ENT_HTML5)
                   . "</a></li>";
         }
         $html .= "</ul>";
