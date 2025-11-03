@@ -17,7 +17,6 @@ class AddUserAction extends Action {
 
         if ($this->http_method === 'POST') {
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-
             if (isset($_POST['mdp'])) {
                 $mdp = $_POST['mdp'];
             } 

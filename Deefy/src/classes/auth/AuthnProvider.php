@@ -32,9 +32,6 @@ class AuthnProvider {
 
         $pdo = DeefyRepository::getInstance()->getPdo();
         $email = filter_var(strtolower(trim($email)), FILTER_SANITIZE_EMAIL);
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new AuthnException("Adresse email invalide !");
-        }
         $query = $pdo->prepare("SELECT * FROM user WHERE email = :email");
         $query->execute([':email' => $email]);
         $user = $query->fetch(\PDO::FETCH_ASSOC);
